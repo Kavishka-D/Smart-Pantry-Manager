@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <ScrollView
-    android:id="@+id/main"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F7FA">
+    android:fillViewport="true"
+    tools:context=".MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,30 +15,27 @@
         android:orientation="vertical"
         android:padding="24dp">
 
-        <!-- App Title -->
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Smart Pantry Manager"
-            android:textColor="#1A1A1A"
             android:textSize="28sp"
             android:textStyle="bold"
+            android:gravity="center"
             android:layout_marginBottom="8dp" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Manage your pantry items easily"
-            android:textColor="#666666"
             android:textSize="16sp"
+            android:gravity="center"
             android:layout_marginBottom="24dp" />
 
-        <!-- Add Item Section -->
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Add Pantry Item"
-            android:textColor="#1A1A1A"
             android:textSize="20sp"
             android:textStyle="bold"
             android:layout_marginBottom="12dp" />
@@ -45,9 +44,8 @@
             android:id="@+id/itemName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Item name"
+            android:hint="Ingredient name"
             android:inputType="text"
-            android:padding="12dp"
             android:layout_marginBottom="12dp" />
 
         <EditText
@@ -55,47 +53,41 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Quantity"
-            android:inputType="number"
-            android:padding="12dp"
+            android:inputType="numberDecimal"
             android:layout_marginBottom="12dp" />
 
         <EditText
-            android:id="@+id/itemCategory"
+            android:id="@+id/itemUnit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Category"
+            android:hint="Unit (e.g. kg, L, items)"
             android:inputType="text"
-            android:padding="12dp"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginBottom="12dp" />
 
         <Button
             android:id="@+id/addItemButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Add Item"
-            android:textSize="16sp"
-            android:layout_marginBottom="28dp" />
+            android:layout_marginBottom="24dp" />
 
-        <!-- Pantry Items Section -->
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Pantry Items"
-            android:textColor="#1A1A1A"
             android:textSize="20sp"
             android:textStyle="bold"
             android:layout_marginBottom="12dp" />
 
         <TextView
             android:id="@+id/emptyMessage"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="No pantry items added yet."
-            android:textColor="#777777"
             android:textSize="16sp"
-            android:layout_marginBottom="16dp" />
+            android:gravity="center"
+            android:padding="16dp" />
 
-        <!-- Pantry Items List -->
         <LinearLayout
             android:id="@+id/pantryList"
             android:layout_width="match_parent"
