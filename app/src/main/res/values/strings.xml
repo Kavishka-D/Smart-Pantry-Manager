@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Smart Pantry Manager</string>
+    <string name="app_title">Smart Pantry Manager</string>
+    <string name="app_subtitle">Manage your pantry items easily</string>
+    <string name="add_pantry_item">Add Pantry Item</string>
+    <string name="ingredient_name">Ingredient name</string>
+    <string name="quantity">Quantity</string>
+    <string name="unit_hint">Unit (e.g. kg, L, items)</string>
+    <string name="add_item">Add Item</string>
+    <string name="pantry_items">Pantry Items</string>
+    <string name="no_pantry_items">No pantry items added yet.</string>
+    <string name="view_suggested_recipes">View Suggested Recipes</string>
 </resources>

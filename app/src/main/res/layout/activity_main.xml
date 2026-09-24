@@ -13,12 +13,34 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:gravity="center_horizontal"
         android:padding="24dp">
+
+        <ImageView
+            android:id="@+id/homeProfileImage"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:src="@drawable/ic_launcher_foreground"
+            android:background="@drawable/circle_profile"
+            android:scaleType="centerCrop"
+            android:clipToOutline="true"
+            android:contentDescription="Profile picture"
+            android:layout_marginBottom="12dp" />
+
+        <TextView
+            android:id="@+id/welcomeMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Welcome!"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="24dp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Smart Pantry Manager"
+            android:text="@string/app_title"
             android:textSize="28sp"
             android:textStyle="bold"
             android:gravity="center"
@@ -27,7 +49,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Manage your pantry items easily"
+            android:text="@string/app_subtitle"
             android:textSize="16sp"
             android:gravity="center"
             android:layout_marginBottom="24dp" />
@@ -35,7 +57,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Add Pantry Item"
+            android:text="@string/add_pantry_item"
             android:textSize="20sp"
             android:textStyle="bold"
             android:layout_marginBottom="12dp" />
@@ -44,37 +66,40 @@
             android:id="@+id/itemName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Ingredient name"
+            android:hint="@string/ingredient_name"
             android:inputType="text"
+            android:importantForAutofill="no"
             android:layout_marginBottom="12dp" />
 
         <EditText
             android:id="@+id/itemQuantity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Quantity"
+            android:hint="@string/quantity"
             android:inputType="numberDecimal"
+            android:importantForAutofill="no"
             android:layout_marginBottom="12dp" />
 
         <EditText
             android:id="@+id/itemUnit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Unit (e.g. kg, L, items)"
+            android:hint="@string/unit_hint"
             android:inputType="text"
+            android:importantForAutofill="no"
             android:layout_marginBottom="12dp" />
 
         <Button
             android:id="@+id/addItemButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Add Item"
+            android:text="@string/add_item"
             android:layout_marginBottom="24dp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Pantry Items"
+            android:text="@string/pantry_items"
             android:textSize="20sp"
             android:textStyle="bold"
             android:layout_marginBottom="12dp" />
@@ -83,7 +108,7 @@
             android:id="@+id/emptyMessage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="No pantry items added yet."
+            android:text="@string/no_pantry_items"
             android:textSize="16sp"
             android:gravity="center"
             android:padding="16dp" />
@@ -93,6 +118,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" />
+
+        <Button
+            android:id="@+id/viewRecipesButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/view_suggested_recipes"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp" />
 
     </LinearLayout>
 

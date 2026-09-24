@@ -1,12 +1,16 @@
 package com.example.smartpantrymanager;
 
 import android.content.ContentValues;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,22 +40,107 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        SharedPreferences preferences =
+                getSharedPreferences(
+                        "SmartPantryPreferences",
+                        MODE_PRIVATE
+                );
+
+        boolean profileCompleted =
+                preferences.getBoolean(
+                        "profile_completed",
+                        false
+                );
+
+        if (!profileCompleted) {
+
+            Intent intent = new Intent(
+                    MainActivity.this,
+                    ProfileSetupActivity.class
+            );
+
+            startActivity(intent);
+            finish();
+
+            return;
+        }
+
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+
+        TextView welcomeMessage =
+                findViewById(R.id.welcomeMessage);
+
+        ImageView homeProfileImage =
+                findViewById(R.id.homeProfileImage);
+
+        String userName =
+                preferences.getString(
+                        "user_name",
+                        "User"
+                );
+
+        welcomeMessage.setText(
+                "Welcome, " + userName + "!"
+        );
+
+        String profileImage =
+                preferences.getString(
+                        "profile_image",
+                        ""
+                );
+
+        if (!profileImage.isEmpty()) {
+
+            try {
+
+                homeProfileImage.setImageURI(
+                        Uri.parse(profileImage)
+                );
+
+            } catch (Exception e) {
+
+                homeProfileImage.setImageResource(
+                        R.drawable.ic_launcher_foreground
+                );
+            }
+        }
 
         itemName = findViewById(R.id.itemName);
         itemQuantity = findViewById(R.id.itemQuantity);
         itemUnit = findViewById(R.id.itemUnit);
 
-        Button addItemButton = findViewById(R.id.addItemButton);
+        Button addItemButton =
+                findViewById(R.id.addItemButton);
 
-        pantryList = findViewById(R.id.pantryList);
-        emptyMessage = findViewById(R.id.emptyMessage);
+        Button viewRecipesButton =
+                findViewById(R.id.viewRecipesButton);
 
-        databaseHelper = new DatabaseHelper(this);
-        database = databaseHelper.getWritableDatabase();
+        pantryList =
+                findViewById(R.id.pantryList);
 
-        addItemButton.setOnClickListener(v -> addPantryItem());
+        emptyMessage =
+                findViewById(R.id.emptyMessage);
+
+        databaseHelper =
+                new DatabaseHelper(this);
+
+        database =
+                databaseHelper.getWritableDatabase();
+
+        addItemButton.setOnClickListener(
+                v -> addPantryItem()
+        );
+
+        viewRecipesButton.setOnClickListener(v -> {
+
+            Intent intent = new Intent(
+                    MainActivity.this,
+                    SuggestedRecipesActivity.class
+            );
+
+            startActivity(intent);
+        });
 
         loadPantryItems();
 
@@ -59,9 +148,10 @@ public class MainActivity extends AppCompatActivity {
                 findViewById(R.id.main),
                 (v, insets) -> {
 
-                    Insets systemBars = insets.getInsets(
-                            WindowInsetsCompat.Type.systemBars()
-                    );
+                    Insets systemBars =
+                            insets.getInsets(
+                                    WindowInsetsCompat.Type.systemBars()
+                            );
 
                     v.setPadding(
                             systemBars.left,
@@ -77,24 +167,47 @@ public class MainActivity extends AppCompatActivity {
 
     private void addPantryItem() {
 
-        String name = itemName.getText().toString().trim();
-        String quantityText = itemQuantity.getText().toString().trim();
-        String unit = itemUnit.getText().toString().trim();
+        String name =
+                itemName.getText()
+                        .toString()
+                        .trim();
+
+        String quantityText =
+                itemQuantity.getText()
+                        .toString()
+                        .trim();
+
+        String unit =
+                itemUnit.getText()
+                        .toString()
+                        .trim();
 
         if (name.isEmpty()) {
-            itemName.setError("Enter an ingredient name");
+
+            itemName.setError(
+                    "Enter an ingredient name"
+            );
+
             itemName.requestFocus();
             return;
         }
 
         if (quantityText.isEmpty()) {
-            itemQuantity.setError("Enter a quantity");
+
+            itemQuantity.setError(
+                    "Enter a quantity"
+            );
+
             itemQuantity.requestFocus();
             return;
         }
 
         if (unit.isEmpty()) {
-            itemUnit.setError("Enter a unit");
+
+            itemUnit.setError(
+                    "Enter a unit"
+            );
+
             itemUnit.requestFocus();
             return;
         }
@@ -102,30 +215,60 @@ public class MainActivity extends AppCompatActivity {
         double quantity;
 
         try {
-            quantity = Double.parseDouble(quantityText);
+
+            quantity =
+                    Double.parseDouble(
+                            quantityText
+                    );
+
         } catch (NumberFormatException e) {
-            itemQuantity.setError("Enter a valid number");
+
+            itemQuantity.setError(
+                    "Enter a valid number"
+            );
+
             itemQuantity.requestFocus();
             return;
         }
 
         if (quantity <= 0) {
-            itemQuantity.setError("Quantity must be greater than 0");
+
+            itemQuantity.setError(
+                    "Quantity must be greater than 0"
+            );
+
             itemQuantity.requestFocus();
             return;
         }
 
-        ContentValues values = new ContentValues();
-        values.put("name", name);
-        values.put("quantity", quantity);
-        values.put("unit", unit);
-        values.putNull("expiry_date");
+        ContentValues values =
+                new ContentValues();
 
-        long result = database.insert(
-                "pantry",
-                null,
-                values
+        values.put(
+                "name",
+                name
         );
+
+        values.put(
+                "quantity",
+                quantity
+        );
+
+        values.put(
+                "unit",
+                unit
+        );
+
+        values.putNull(
+                "expiry_date"
+        );
+
+        long result =
+                database.insert(
+                        "pantry",
+                        null,
+                        values
+                );
 
         if (result != -1) {
 
@@ -155,46 +298,63 @@ public class MainActivity extends AppCompatActivity {
 
         pantryList.removeAllViews();
 
-        Cursor cursor = database.query(
-                "pantry",
-                new String[]{
-                        "id",
-                        "name",
-                        "quantity",
-                        "unit"
-                },
-                null,
-                null,
-                null,
-                null,
-                "name ASC"
-        );
+        Cursor cursor =
+                database.query(
+                        "pantry",
+                        new String[]{
+                                "id",
+                                "name",
+                                "quantity",
+                                "unit"
+                        },
+                        null,
+                        null,
+                        null,
+                        null,
+                        "name ASC"
+                );
 
         if (cursor.getCount() == 0) {
 
-            emptyMessage.setVisibility(TextView.VISIBLE);
+            emptyMessage.setVisibility(
+                    TextView.VISIBLE
+            );
 
         } else {
 
-            emptyMessage.setVisibility(TextView.GONE);
+            emptyMessage.setVisibility(
+                    TextView.GONE
+            );
 
             while (cursor.moveToNext()) {
 
-                int id = cursor.getInt(
-                        cursor.getColumnIndexOrThrow("id")
-                );
+                int id =
+                        cursor.getInt(
+                                cursor.getColumnIndexOrThrow(
+                                        "id"
+                                )
+                        );
 
-                String name = cursor.getString(
-                        cursor.getColumnIndexOrThrow("name")
-                );
+                String name =
+                        cursor.getString(
+                                cursor.getColumnIndexOrThrow(
+                                        "name"
+                                )
+                        );
 
-                double quantity = cursor.getDouble(
-                        cursor.getColumnIndexOrThrow("quantity")
-                );
+                double quantity =
+                        cursor.getDouble(
+                                cursor.getColumnIndexOrThrow(
+                                        "quantity"
+                                )
+                        );
 
-                String unit = cursor.getString(
-                        cursor.getColumnIndexOrThrow("unit")
-                );
+                String unit =
+                        cursor.getString(
+                                cursor.getColumnIndexOrThrow(
+                                        "unit"
+                                )
+                        );
 
                 LinearLayout itemLayout =
                         new LinearLayout(this);
@@ -214,7 +374,11 @@ public class MainActivity extends AppCompatActivity {
                         new TextView(this);
 
                 itemView.setText(
-                        name + " - " + quantity + " " + unit
+                        name
+                                + " - "
+                                + quantity
+                                + " "
+                                + unit
                 );
 
                 itemView.setTextSize(18);
@@ -226,12 +390,16 @@ public class MainActivity extends AppCompatActivity {
                                 1
                         );
 
-                itemView.setLayoutParams(textParams);
+                itemView.setLayoutParams(
+                        textParams
+                );
 
                 Button editButton =
                         new Button(this);
 
-                editButton.setText("Edit");
+                editButton.setText(
+                        "Edit"
+                );
 
                 editButton.setOnClickListener(
                         v -> showEditDialog(
@@ -245,7 +413,9 @@ public class MainActivity extends AppCompatActivity {
                 Button deleteButton =
                         new Button(this);
 
-                deleteButton.setText("Delete");
+                deleteButton.setText(
+                        "Delete"
+                );
 
                 deleteButton.setOnClickListener(
                         v -> showDeleteConfirmation(
@@ -254,11 +424,21 @@ public class MainActivity extends AppCompatActivity {
                         )
                 );
 
-                itemLayout.addView(itemView);
-                itemLayout.addView(editButton);
-                itemLayout.addView(deleteButton);
+                itemLayout.addView(
+                        itemView
+                );
 
-                pantryList.addView(itemLayout);
+                itemLayout.addView(
+                        editButton
+                );
+
+                itemLayout.addView(
+                        deleteButton
+                );
+
+                pantryList.addView(
+                        itemLayout
+                );
             }
         }
 
@@ -289,13 +469,20 @@ public class MainActivity extends AppCompatActivity {
         EditText editName =
                 new EditText(this);
 
-        editName.setHint("Ingredient name");
-        editName.setText(name);
+        editName.setHint(
+                "Ingredient name"
+        );
+
+        editName.setText(
+                name
+        );
 
         EditText editQuantity =
                 new EditText(this);
 
-        editQuantity.setHint("Quantity");
+        editQuantity.setHint(
+                "Quantity"
+        );
 
         editQuantity.setInputType(
                 InputType.TYPE_CLASS_NUMBER
@@ -309,16 +496,33 @@ public class MainActivity extends AppCompatActivity {
         EditText editUnit =
                 new EditText(this);
 
-        editUnit.setHint("Unit");
-        editUnit.setText(unit);
+        editUnit.setHint(
+                "Unit"
+        );
 
-        editLayout.addView(editName);
-        editLayout.addView(editQuantity);
-        editLayout.addView(editUnit);
+        editUnit.setText(
+                unit
+        );
+
+        editLayout.addView(
+                editName
+        );
+
+        editLayout.addView(
+                editQuantity
+        );
+
+        editLayout.addView(
+                editUnit
+        );
 
         new AlertDialog.Builder(this)
-                .setTitle("Edit Pantry Item")
-                .setView(editLayout)
+                .setTitle(
+                        "Edit Pantry Item"
+                )
+                .setView(
+                        editLayout
+                )
                 .setNegativeButton(
                         "Cancel",
                         null
@@ -433,7 +637,9 @@ public class MainActivity extends AppCompatActivity {
     ) {
 
         new AlertDialog.Builder(this)
-                .setTitle("Delete Item")
+                .setTitle(
+                        "Delete Item"
+                )
                 .setMessage(
                         "Are you sure you want to delete "
                                 + name
