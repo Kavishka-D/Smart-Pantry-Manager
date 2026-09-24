@@ -1,8 +1,10 @@
 package com.example.smartpantrymanager;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -11,94 +13,109 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.smartpantrymanager.database.DatabaseHelper;
 
-public class SuggestedRecipesActivity extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
-    private LinearLayout recipeList;
-    private TextView recipeMessage;
+public class SuggestedRecipesActivity extends AppCompatActivity {
 
     private DatabaseHelper databaseHelper;
     private SQLiteDatabase database;
+
+    private LinearLayout recipeList;
+    private TextView recipeMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_suggested_recipes);
 
-        recipeList = findViewById(R.id.recipeList);
-        recipeMessage = findViewById(R.id.recipeMessage);
+        recipeList =
+                findViewById(R.id.recipeList);
 
-        Button backButton = findViewById(R.id.backButton);
+        recipeMessage =
+                findViewById(R.id.recipeMessage);
 
-        databaseHelper = new DatabaseHelper(this);
-        database = databaseHelper.getReadableDatabase();
+        Button backButton =
+                findViewById(R.id.backButton);
+
+        databaseHelper =
+                new DatabaseHelper(this);
+
+        database =
+                databaseHelper.getReadableDatabase();
 
         backButton.setOnClickListener(v -> finish());
 
         loadSuggestedRecipes();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (database != null) {
+            loadSuggestedRecipes();
+        }
+    }
+
     private void loadSuggestedRecipes() {
 
         recipeList.removeAllViews();
 
-        Cursor pantryCursor = database.query(
-                "pantry",
-                new String[]{"name", "quantity"},
-                null,
-                null,
-                null,
-                null,
-                null
-        );
+        Map<String, PantryAmount> pantry =
+                getPantryIngredients();
 
-        if (pantryCursor.getCount() == 0) {
+        Cursor recipeCursor =
+                database.query(
+                        "recipes",
+                        new String[]{
+                                "id",
+                                "name"
+                        },
+                        null,
+                        null,
+                        null,
+                        null,
+                        "name ASC"
+                );
 
-            pantryCursor.close();
-
-            recipeMessage.setText(
-                    "Your pantry is empty. Add ingredients first."
-            );
-
-            return;
-        }
-
-        Cursor recipeCursor = database.query(
-                "recipes",
-                new String[]{"id", "name"},
-                null,
-                null,
-                null,
-                null,
-                "name ASC"
-        );
-
-        int matchingRecipes = 0;
+        int recipeCount = 0;
 
         while (recipeCursor.moveToNext()) {
 
-            int recipeId = recipeCursor.getInt(
-                    recipeCursor.getColumnIndexOrThrow("id")
-            );
+            int recipeId =
+                    recipeCursor.getInt(
+                            recipeCursor.getColumnIndexOrThrow(
+                                    "id"
+                            )
+                    );
 
-            String recipeName = recipeCursor.getString(
-                    recipeCursor.getColumnIndexOrThrow("name")
-            );
+            String recipeName =
+                    recipeCursor.getString(
+                            recipeCursor.getColumnIndexOrThrow(
+                                    "name"
+                            )
+                    );
 
-            if (recipeMatchesPantry(recipeId)) {
-
-                matchingRecipes++;
+            if (recipeCanBeMade(
+                    recipeId,
+                    pantry
+            )) {
 
                 addRecipeButton(
                         recipeId,
                         recipeName
                 );
+
+                recipeCount++;
             }
         }
 
         recipeCursor.close();
-        pantryCursor.close();
 
-        if (matchingRecipes == 0) {
+        if (recipeCount == 0) {
 
             recipeMessage.setText(
                     "No recipes can be made with your current pantry ingredients."
@@ -107,33 +124,121 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
         } else {
 
             recipeMessage.setText(
-                    "Select a recipe to view its ingredients and instructions."
+                    recipeCount
+                            + " recipe(s) can be made with your pantry."
             );
         }
     }
 
-    private boolean recipeMatchesPantry(int recipeId) {
+    private Map<String, PantryAmount> getPantryIngredients() {
 
-        Cursor ingredientCursor = database.query(
-                "recipe_ingredients",
-                new String[]{
-                        "ingredient_name",
-                        "quantity"
-                },
-                "recipe_id = ?",
-                new String[]{
-                        String.valueOf(recipeId)
-                },
-                null,
-                null,
-                null
-        );
+        Map<String, PantryAmount> pantry =
+                new HashMap<>();
 
-        boolean matches = true;
+        Cursor cursor =
+                database.query(
+                        "pantry",
+                        new String[]{
+                                "name",
+                                "quantity",
+                                "unit"
+                        },
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                );
+
+        while (cursor.moveToNext()) {
+
+            String name =
+                    cursor.getString(
+                            cursor.getColumnIndexOrThrow(
+                                    "name"
+                            )
+                    );
+
+            double quantity =
+                    cursor.getDouble(
+                            cursor.getColumnIndexOrThrow(
+                                    "quantity"
+                            )
+                    );
+
+            String unit =
+                    cursor.getString(
+                            cursor.getColumnIndexOrThrow(
+                                    "unit"
+                            )
+                    );
+
+            String normalisedName =
+                    normaliseIngredientName(name);
+
+            double convertedQuantity =
+                    convertToBaseUnit(
+                            quantity,
+                            unit
+                    );
+
+            String baseUnit =
+                    getBaseUnit(unit);
+
+            if (pantry.containsKey(normalisedName)) {
+
+                PantryAmount existing =
+                        pantry.get(normalisedName);
+
+                if (existing != null
+                        && existing.baseUnit.equals(baseUnit)) {
+
+                    existing.quantity +=
+                            convertedQuantity;
+                }
+
+            } else {
+
+                pantry.put(
+                        normalisedName,
+                        new PantryAmount(
+                                convertedQuantity,
+                                baseUnit
+                        )
+                );
+            }
+        }
+
+        cursor.close();
+
+        return pantry;
+    }
+
+    private boolean recipeCanBeMade(
+            int recipeId,
+            Map<String, PantryAmount> pantry
+    ) {
+
+        Cursor ingredientCursor =
+                database.query(
+                        "recipe_ingredients",
+                        new String[]{
+                                "ingredient_name",
+                                "quantity",
+                                "unit"
+                        },
+                        "recipe_id = ?",
+                        new String[]{
+                                String.valueOf(recipeId)
+                        },
+                        null,
+                        null,
+                        null
+                );
 
         while (ingredientCursor.moveToNext()) {
 
-            String requiredIngredient =
+            String ingredientName =
                     ingredientCursor.getString(
                             ingredientCursor.getColumnIndexOrThrow(
                                     "ingredient_name"
@@ -147,54 +252,211 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
                             )
                     );
 
-            if (!pantryHasEnoughIngredient(
-                    requiredIngredient,
-                    requiredQuantity
+            String requiredUnit =
+                    ingredientCursor.getString(
+                            ingredientCursor.getColumnIndexOrThrow(
+                                    "unit"
+                            )
+                    );
+
+            String normalisedName =
+                    normaliseIngredientName(
+                            ingredientName
+                    );
+
+            PantryAmount pantryAmount =
+                    pantry.get(normalisedName);
+
+            if (pantryAmount == null) {
+
+                ingredientCursor.close();
+                return false;
+            }
+
+            double requiredBaseQuantity =
+                    convertToBaseUnit(
+                            requiredQuantity,
+                            requiredUnit
+                    );
+
+            String requiredBaseUnit =
+                    getBaseUnit(requiredUnit);
+
+            if (!pantryAmount.baseUnit.equals(
+                    requiredBaseUnit
             )) {
 
-                matches = false;
-                break;
+                ingredientCursor.close();
+                return false;
+            }
+
+            if (pantryAmount.quantity
+                    < requiredBaseQuantity) {
+
+                ingredientCursor.close();
+                return false;
             }
         }
 
         ingredientCursor.close();
 
-        return matches;
+        return true;
     }
 
-    private boolean pantryHasEnoughIngredient(
-            String requiredIngredient,
-            double requiredQuantity
+    private String normaliseIngredientName(
+            String name
     ) {
 
-        Cursor pantryCursor = database.query(
-                "pantry",
-                new String[]{"quantity"},
-                "LOWER(name) = ?",
-                new String[]{
-                        requiredIngredient.toLowerCase()
-                },
-                null,
-                null,
-                null
-        );
+        String normalised =
+                name.trim()
+                        .toLowerCase(Locale.ROOT);
 
-        if (!pantryCursor.moveToFirst()) {
+        if (normalised.endsWith("ies")
+                && normalised.length() > 3) {
 
-            pantryCursor.close();
-            return false;
+            normalised =
+                    normalised.substring(
+                            0,
+                            normalised.length() - 3
+                    )
+                            + "y";
+
+        } else if (normalised.endsWith("es")
+                && normalised.length() > 2) {
+
+            normalised =
+                    normalised.substring(
+                            0,
+                            normalised.length() - 2
+                    );
+
+        } else if (normalised.endsWith("s")
+                && !normalised.endsWith("ss")
+                && normalised.length() > 1) {
+
+            normalised =
+                    normalised.substring(
+                            0,
+                            normalised.length() - 1
+                    );
         }
 
-        double pantryQuantity =
-                pantryCursor.getDouble(
-                        pantryCursor.getColumnIndexOrThrow(
-                                "quantity"
-                        )
-                );
+        return normalised;
+    }
 
-        pantryCursor.close();
+    private String getBaseUnit(String unit) {
 
-        return pantryQuantity >= requiredQuantity;
+        String normalised =
+                unit.trim()
+                        .toLowerCase(Locale.ROOT);
+
+        switch (normalised) {
+
+            case "kg":
+            case "kgs":
+            case "kilogram":
+            case "kilograms":
+                return "g";
+
+            case "g":
+            case "gram":
+            case "grams":
+                return "g";
+
+            case "l":
+            case "liter":
+            case "liters":
+            case "litre":
+            case "litres":
+                return "ml";
+
+            case "ml":
+            case "milliliter":
+            case "milliliters":
+            case "millilitre":
+            case "millilitres":
+                return "ml";
+
+            case "tbsp":
+            case "tablespoon":
+            case "tablespoons":
+                return "tbsp";
+
+            case "tsp":
+            case "teaspoon":
+            case "teaspoons":
+                return "tsp";
+
+            case "cup":
+            case "cups":
+                return "cup";
+
+            case "item":
+            case "items":
+            case "piece":
+            case "pieces":
+                return "item";
+
+            case "slice":
+            case "slices":
+                return "slice";
+
+            case "leaf":
+            case "leaves":
+                return "leaf";
+
+            case "clove":
+            case "cloves":
+                return "clove";
+
+            case "bun":
+            case "buns":
+                return "bun";
+
+            default:
+                return normalised;
+        }
+    }
+
+    private double convertToBaseUnit(
+            double quantity,
+            String unit
+    ) {
+
+        String normalised =
+                unit.trim()
+                        .toLowerCase(Locale.ROOT);
+
+        switch (normalised) {
+
+            case "kg":
+            case "kgs":
+            case "kilogram":
+            case "kilograms":
+                return quantity * 1000;
+
+            case "g":
+            case "gram":
+            case "grams":
+                return quantity;
+
+            case "l":
+            case "liter":
+            case "liters":
+            case "litre":
+            case "litres":
+                return quantity * 1000;
+
+            case "ml":
+            case "milliliter":
+            case "milliliters":
+            case "millilitre":
+            case "millilitres":
+                return quantity;
+
+            default:
+                return quantity;
+        }
     }
 
     private void addRecipeButton(
@@ -202,214 +464,47 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
             String recipeName
     ) {
 
-        Button recipeButton = new Button(this);
-
-        recipeButton.setText(recipeName);
-        recipeButton.setTextSize(18);
-        recipeButton.setAllCaps(false);
-
-        LinearLayout.LayoutParams params =
-                new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT
-                );
-
-        params.setMargins(
-                0,
-                8,
-                0,
-                8
-        );
-
-        recipeButton.setLayoutParams(params);
-
-        recipeButton.setOnClickListener(
-                v -> showRecipeDetails(
-                        recipeId,
-                        recipeName
-                )
-        );
-
-        recipeList.addView(recipeButton);
-    }
-
-    private void showRecipeDetails(
-            int recipeId,
-            String recipeName
-    ) {
-
-        recipeList.removeAllViews();
-
-        recipeMessage.setText(recipeName);
-
-        TextView ingredientsTitle =
-                new TextView(this);
-
-        ingredientsTitle.setText("Ingredients");
-        ingredientsTitle.setTextSize(22);
-        ingredientsTitle.setTextAlignment(
-                TextView.TEXT_ALIGNMENT_CENTER
-        );
-        ingredientsTitle.setPadding(
-                0,
-                16,
-                0,
-                12
-        );
-
-        recipeList.addView(ingredientsTitle);
-
-        Cursor ingredientCursor = database.query(
-                "recipe_ingredients",
-                new String[]{
-                        "ingredient_name",
-                        "quantity",
-                        "unit"
-                },
-                "recipe_id = ?",
-                new String[]{
-                        String.valueOf(recipeId)
-                },
-                null,
-                null,
-                null
-        );
-
-        while (ingredientCursor.moveToNext()) {
-
-            String ingredientName =
-                    ingredientCursor.getString(
-                            ingredientCursor.getColumnIndexOrThrow(
-                                    "ingredient_name"
-                            )
-                    );
-
-            double quantity =
-                    ingredientCursor.getDouble(
-                            ingredientCursor.getColumnIndexOrThrow(
-                                    "quantity"
-                            )
-                    );
-
-            String unit =
-                    ingredientCursor.getString(
-                            ingredientCursor.getColumnIndexOrThrow(
-                                    "unit"
-                            )
-                    );
-
-            TextView ingredientView =
-                    new TextView(this);
-
-            ingredientView.setText(
-                    "• " + ingredientName
-                            + " - "
-                            + quantity
-                            + " "
-                            + unit
-            );
-
-            ingredientView.setTextSize(18);
-
-            ingredientView.setPadding(
-                    8,
-                    6,
-                    8,
-                    6
-            );
-
-            recipeList.addView(ingredientView);
-        }
-
-        ingredientCursor.close();
-
-        TextView instructionsTitle =
-                new TextView(this);
-
-        instructionsTitle.setText("Instructions");
-        instructionsTitle.setTextSize(22);
-        instructionsTitle.setTextAlignment(
-                TextView.TEXT_ALIGNMENT_CENTER
-        );
-        instructionsTitle.setPadding(
-                0,
-                24,
-                0,
-                12
-        );
-
-        recipeList.addView(instructionsTitle);
-
-        Cursor recipeCursor = database.query(
-                "recipes",
-                new String[]{"steps"},
-                "id = ?",
-                new String[]{
-                        String.valueOf(recipeId)
-                },
-                null,
-                null,
-                null
-        );
-
-        if (recipeCursor.moveToFirst()) {
-
-            String steps =
-                    recipeCursor.getString(
-                            recipeCursor.getColumnIndexOrThrow(
-                                    "steps"
-                            )
-                    );
-
-            String[] individualSteps =
-                    steps.split("(?<=[.!?])\\s+");
-
-            for (int i = 0; i < individualSteps.length; i++) {
-
-                String step =
-                        individualSteps[i].trim();
-
-                if (!step.isEmpty()) {
-
-                    TextView instructionView =
-                            new TextView(this);
-
-                    instructionView.setText(
-                            (i + 1) + ". " + step
-                    );
-
-                    instructionView.setTextSize(16);
-
-                    instructionView.setPadding(
-                            8,
-                            8,
-                            8,
-                            8
-                    );
-
-                    recipeList.addView(
-                            instructionView
-                    );
-                }
-            }
-        }
-
-        recipeCursor.close();
-
-        Button backToRecipesButton =
+        Button recipeButton =
                 new Button(this);
 
-        backToRecipesButton.setText(
-                "Back to Recipes"
+        recipeButton.setText(
+                recipeName
         );
 
-        backToRecipesButton.setOnClickListener(
-                v -> loadSuggestedRecipes()
-        );
+        recipeButton.setTextSize(18);
+
+        recipeButton.setOnClickListener(v -> {
+
+            Intent intent =
+                    new Intent(
+                            SuggestedRecipesActivity.this,
+                            RecipeDetailActivity.class
+                    );
+
+            intent.putExtra(
+                    "recipe_id",
+                    recipeId
+            );
+
+            startActivity(intent);
+        });
 
         recipeList.addView(
-                backToRecipesButton
+                recipeButton
         );
     }
-}
 
+    private static class PantryAmount {
+
+        double quantity;
+        String baseUnit;
+
+        PantryAmount(
+                double quantity,
+                String baseUnit
+        ) {
+            this.quantity = quantity;
+            this.baseUnit = baseUnit;
+        }
+    }
+}

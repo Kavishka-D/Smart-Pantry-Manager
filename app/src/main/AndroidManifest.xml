@@ -30,6 +30,10 @@
             android:exported="false" />
 
         <activity
+            android:name=".RecipeDetailActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".ProfileSetupActivity"
             android:exported="false" />
 
