@@ -52,79 +52,34 @@
             android:text="@string/app_subtitle"
             android:textSize="16sp"
             android:gravity="center"
-            android:layout_marginBottom="24dp" />
+            android:layout_marginBottom="32dp" />
 
-        <TextView
+        <Button
+            android:id="@+id/addIngredientButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/add_pantry_item"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="12dp" />
-
-        <EditText
-            android:id="@+id/itemName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/ingredient_name"
-            android:inputType="text"
-            android:importantForAutofill="no"
-            android:layout_marginBottom="12dp" />
-
-        <EditText
-            android:id="@+id/itemQuantity"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/quantity"
-            android:inputType="numberDecimal"
-            android:importantForAutofill="no"
-            android:layout_marginBottom="12dp" />
-
-        <EditText
-            android:id="@+id/itemUnit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/unit_hint"
-            android:inputType="text"
-            android:importantForAutofill="no"
+            android:text="Add Pantry Ingredient"
             android:layout_marginBottom="12dp" />
 
         <Button
-            android:id="@+id/addItemButton"
+            android:id="@+id/viewPantryButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/add_item"
-            android:layout_marginBottom="24dp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/pantry_items"
-            android:textSize="20sp"
-            android:textStyle="bold"
+            android:text="View Pantry"
             android:layout_marginBottom="12dp" />
-
-        <TextView
-            android:id="@+id/emptyMessage"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/no_pantry_items"
-            android:textSize="16sp"
-            android:gravity="center"
-            android:padding="16dp" />
-
-        <LinearLayout
-            android:id="@+id/pantryList"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" />
 
         <Button
             android:id="@+id/viewRecipesButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/view_suggested_recipes"
-            android:layout_marginTop="16dp"
+            android:layout_marginBottom="12dp" />
+
+        <Button
+            android:id="@+id/settingsButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Settings &amp; Profile"
             android:layout_marginBottom="16dp" />
 
     </LinearLayout>

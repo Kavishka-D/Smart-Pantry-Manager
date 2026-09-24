@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:id="@+id/addEditTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add Pantry Item"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="24dp" />
+
+        <EditText
+            android:id="@+id/ingredientNameInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Ingredient name"
+            android:inputType="text"
+            android:importantForAutofill="no"
+            android:layout_marginBottom="16dp" />
+
+        <EditText
+            android:id="@+id/ingredientQuantityInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Quantity"
+            android:inputType="numberDecimal"
+            android:importantForAutofill="no"
+            android:layout_marginBottom="16dp" />
+
+        <EditText
+            android:id="@+id/ingredientUnitInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Unit (e.g. kg, g, L, items)"
+            android:inputType="text"
+            android:importantForAutofill="no"
+            android:layout_marginBottom="16dp" />
+
+        <EditText
+            android:id="@+id/expiryDateInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Expiry date (optional)"
+            android:focusable="false"
+            android:clickable="true"
+            android:layout_marginBottom="24dp" />
+
+        <Button
+            android:id="@+id/saveIngredientButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Save Ingredient"
+            android:layout_marginBottom="12dp" />
+
+        <Button
+            android:id="@+id/cancelButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cancel" />
+
+    </LinearLayout>
+
+</ScrollView>
