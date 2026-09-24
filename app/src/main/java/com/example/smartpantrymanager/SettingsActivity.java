@@ -9,6 +9,7 @@ import android.provider.MediaStore;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,6 +24,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     private ImageView profileImage;
     private EditText nameInput;
+    private Switch expiryAlertSwitch;
 
     private Uri selectedImageUri;
 
@@ -38,6 +40,9 @@ public class SettingsActivity extends AppCompatActivity {
 
         nameInput =
                 findViewById(R.id.settingsNameInput);
+
+        expiryAlertSwitch =
+                findViewById(R.id.expiryAlertSwitch);
 
         Button changePhotoButton =
                 findViewById(R.id.changePhotoButton);
@@ -61,6 +66,16 @@ public class SettingsActivity extends AppCompatActivity {
                 );
 
         nameInput.setText(savedName);
+
+        boolean expiryAlertsEnabled =
+                preferences.getBoolean(
+                        "expiry_alerts_enabled",
+                        true
+                );
+
+        expiryAlertSwitch.setChecked(
+                expiryAlertsEnabled
+        );
 
         String savedImage =
                 preferences.getString(
@@ -122,6 +137,11 @@ public class SettingsActivity extends AppCompatActivity {
                     name
             );
 
+            editor.putBoolean(
+                    "expiry_alerts_enabled",
+                    expiryAlertSwitch.isChecked()
+            );
+
             if (selectedImageUri != null) {
 
                 String savedImagePath =
@@ -142,7 +162,7 @@ public class SettingsActivity extends AppCompatActivity {
 
             Toast.makeText(
                     SettingsActivity.this,
-                    "Profile updated successfully",
+                    "Settings saved successfully",
                     Toast.LENGTH_SHORT
             ).show();
 

@@ -39,6 +39,14 @@
             android:text="Change Profile Picture"
             android:layout_marginBottom="24dp" />
 
+        <Switch
+            android:id="@+id/expiryAlertSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Expiring-soon alerts"
+            android:textSize="18sp"
+            android:layout_marginBottom="20dp" />
+
         <EditText
             android:id="@+id/settingsNameInput"
             android:layout_width="match_parent"
