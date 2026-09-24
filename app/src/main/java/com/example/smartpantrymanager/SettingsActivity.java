@@ -13,6 +13,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -52,7 +54,6 @@ public class SettingsActivity extends AppCompatActivity {
                         MODE_PRIVATE
                 );
 
-        // Load saved name
         String savedName =
                 preferences.getString(
                         "user_name",
@@ -61,7 +62,6 @@ public class SettingsActivity extends AppCompatActivity {
 
         nameInput.setText(savedName);
 
-        // Load saved profile picture
         String savedImage =
                 preferences.getString(
                         "profile_image",
@@ -70,12 +70,20 @@ public class SettingsActivity extends AppCompatActivity {
 
         if (!savedImage.isEmpty()) {
 
-            profileImage.setImageURI(
-                    Uri.parse(savedImage)
-            );
+            try {
+
+                profileImage.setImageURI(
+                        Uri.parse(savedImage)
+                );
+
+            } catch (Exception e) {
+
+                profileImage.setImageResource(
+                        R.drawable.ic_launcher_foreground
+                );
+            }
         }
 
-        // Change profile picture
         changePhotoButton.setOnClickListener(v -> {
 
             Intent intent = new Intent(
@@ -89,7 +97,6 @@ public class SettingsActivity extends AppCompatActivity {
             );
         });
 
-        // Save profile
         saveProfileButton.setOnClickListener(v -> {
 
             String name =
@@ -117,10 +124,18 @@ public class SettingsActivity extends AppCompatActivity {
 
             if (selectedImageUri != null) {
 
-                editor.putString(
-                        "profile_image",
-                        selectedImageUri.toString()
-                );
+                String savedImagePath =
+                        saveImageToInternalStorage(
+                                selectedImageUri
+                        );
+
+                if (savedImagePath != null) {
+
+                    editor.putString(
+                            "profile_image",
+                            savedImagePath
+                    );
+                }
             }
 
             editor.apply();
@@ -140,7 +155,6 @@ public class SettingsActivity extends AppCompatActivity {
             finish();
         });
 
-        // Back to Home
         backToHomeButton.setOnClickListener(v -> {
 
             Intent intent = new Intent(
@@ -151,6 +165,49 @@ public class SettingsActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
+    }
+
+    private String saveImageToInternalStorage(
+            Uri imageUri
+    ) {
+
+        try {
+
+            Bitmap bitmap =
+                    MediaStore.Images.Media.getBitmap(
+                            getContentResolver(),
+                            imageUri
+                    );
+
+            File file =
+                    new File(
+                            getFilesDir(),
+                            "profile_picture.jpg"
+                    );
+
+            FileOutputStream outputStream =
+                    new FileOutputStream(file);
+
+            bitmap.compress(
+                    Bitmap.CompressFormat.JPEG,
+                    90,
+                    outputStream
+            );
+
+            outputStream.close();
+
+            return file.getAbsolutePath();
+
+        } catch (IOException e) {
+
+            Toast.makeText(
+                    this,
+                    "Unable to save profile picture",
+                    Toast.LENGTH_SHORT
+            ).show();
+
+            return null;
+        }
     }
 
     @Override

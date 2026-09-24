@@ -10,4 +10,6 @@
     <string name="pantry_items">Pantry Items</string>
     <string name="no_pantry_items">No pantry items added yet.</string>
     <string name="view_suggested_recipes">View Suggested Recipes</string>
+    <string name="open_drawer">Open navigation menu</string>
+    <string name="close_drawer">Close navigation menu</string>
 </resources>
