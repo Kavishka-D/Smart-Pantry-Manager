@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -24,7 +23,10 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
     private SQLiteDatabase database;
 
     private LinearLayout recipeList;
+    private LinearLayout almostThereList;
+
     private TextView recipeMessage;
+    private TextView almostThereMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +36,14 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
         recipeList =
                 findViewById(R.id.recipeList);
 
+        almostThereList =
+                findViewById(R.id.almostThereList);
+
         recipeMessage =
                 findViewById(R.id.recipeMessage);
+
+        almostThereMessage =
+                findViewById(R.id.almostThereMessage);
 
         Button backButton =
                 findViewById(R.id.backButton);
@@ -63,6 +71,7 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
     private void loadSuggestedRecipes() {
 
         recipeList.removeAllViews();
+        almostThereList.removeAllViews();
 
         Map<String, PantryAmount> pantry =
                 getPantryIngredients();
@@ -82,6 +91,7 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
                 );
 
         int recipeCount = 0;
+        int almostThereCount = 0;
 
         while (recipeCursor.moveToNext()) {
 
@@ -99,17 +109,31 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
                             )
                     );
 
-            if (recipeCanBeMade(
-                    recipeId,
-                    pantry
-            )) {
+            ArrayList<String> missingIngredients =
+                    getMissingIngredients(
+                            recipeId,
+                            pantry
+                    );
+
+            if (missingIngredients.isEmpty()) {
 
                 addRecipeButton(
                         recipeId,
-                        recipeName
+                        recipeName,
+                        recipeList
                 );
 
                 recipeCount++;
+
+            } else if (missingIngredients.size() == 1) {
+
+                addAlmostThereButton(
+                        recipeId,
+                        recipeName,
+                        missingIngredients.get(0)
+                );
+
+                almostThereCount++;
             }
         }
 
@@ -126,6 +150,20 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
             recipeMessage.setText(
                     recipeCount
                             + " recipe(s) can be made with your pantry."
+            );
+        }
+
+        if (almostThereCount == 0) {
+
+            almostThereMessage.setText(
+                    "No recipes are missing only one ingredient."
+            );
+
+        } else {
+
+            almostThereMessage.setText(
+                    almostThereCount
+                            + " recipe(s) are missing only one ingredient."
             );
         }
     }
@@ -214,10 +252,13 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
         return pantry;
     }
 
-    private boolean recipeCanBeMade(
+    private ArrayList<String> getMissingIngredients(
             int recipeId,
             Map<String, PantryAmount> pantry
     ) {
+
+        ArrayList<String> missingIngredients =
+                new ArrayList<>();
 
         Cursor ingredientCursor =
                 database.query(
@@ -269,8 +310,11 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
 
             if (pantryAmount == null) {
 
-                ingredientCursor.close();
-                return false;
+                missingIngredients.add(
+                        ingredientName
+                );
+
+                continue;
             }
 
             double requiredBaseQuantity =
@@ -286,21 +330,25 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
                     requiredBaseUnit
             )) {
 
-                ingredientCursor.close();
-                return false;
+                missingIngredients.add(
+                        ingredientName
+                );
+
+                continue;
             }
 
             if (pantryAmount.quantity
                     < requiredBaseQuantity) {
 
-                ingredientCursor.close();
-                return false;
+                missingIngredients.add(
+                        ingredientName
+                );
             }
         }
 
         ingredientCursor.close();
 
-        return true;
+        return missingIngredients;
     }
 
     private String normaliseIngredientName(
@@ -461,7 +509,8 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
 
     private void addRecipeButton(
             int recipeId,
-            String recipeName
+            String recipeName,
+            LinearLayout targetList
     ) {
 
         Button recipeButton =
@@ -489,7 +538,45 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        recipeList.addView(
+        targetList.addView(
+                recipeButton
+        );
+    }
+
+    private void addAlmostThereButton(
+            int recipeId,
+            String recipeName,
+            String missingIngredient
+    ) {
+
+        Button recipeButton =
+                new Button(this);
+
+        recipeButton.setText(
+                recipeName
+                        + "\nMissing: "
+                        + missingIngredient
+        );
+
+        recipeButton.setTextSize(17);
+
+        recipeButton.setOnClickListener(v -> {
+
+            Intent intent =
+                    new Intent(
+                            SuggestedRecipesActivity.this,
+                            RecipeDetailActivity.class
+                    );
+
+            intent.putExtra(
+                    "recipe_id",
+                    recipeId
+            );
+
+            startActivity(intent);
+        });
+
+        almostThereList.addView(
                 recipeButton
         );
     }
@@ -503,6 +590,7 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
                 double quantity,
                 String baseUnit
         ) {
+
             this.quantity = quantity;
             this.baseUnit = baseUnit;
         }

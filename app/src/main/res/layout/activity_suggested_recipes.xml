@@ -1,49 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="24dp">
+    android:layout_height="match_parent">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Suggested Recipes"
-        android:textSize="28sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:layout_marginBottom="16dp" />
+        android:orientation="vertical"
+        android:padding="24dp">
 
-    <TextView
-        android:id="@+id/recipeMessage"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Select a recipe"
-        android:textSize="16sp"
-        android:gravity="center"
-        android:layout_marginBottom="16dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Suggested Recipes"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="16dp" />
 
-    <ScrollView
-        android:id="@+id/recipeScrollView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        <TextView
+            android:id="@+id/recipeMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Checking your pantry..."
+            android:textSize="16sp"
+            android:gravity="center"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Strict recipe suggestions -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Recipes You Can Make"
+            android:textSize="21sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
 
         <LinearLayout
             android:id="@+id/recipeList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
+            android:orientation="vertical"
+            android:layout_marginBottom="28dp" />
 
-    </ScrollView>
+        <!-- Almost There section -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Almost There"
+            android:textSize="21sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp" />
 
-    <Button
-        android:id="@+id/backButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Back" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Recipes missing only one ingredient"
+            android:textSize="15sp"
+            android:layout_marginBottom="8dp" />
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/almostThereMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Checking..."
+            android:textSize="15sp"
+            android:layout_marginBottom="8dp" />
 
+        <LinearLayout
+            android:id="@+id/almostThereList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="28dp" />
+
+        <Button
+            android:id="@+id/backButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Back" />
+
+    </LinearLayout>
+
+</ScrollView>
