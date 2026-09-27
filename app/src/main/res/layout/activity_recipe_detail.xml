@@ -1,64 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/cream">
 
-    <LinearLayout
+    <!-- Fixed dark sage area behind the notification/status bar -->
+    <View
+        android:id="@+id/statusBarBackground"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="24dp">
+        android:layout_height="0dp"
+        android:background="@color/sage_dark" />
 
-        <TextView
-            android:id="@+id/recipeDetailTitle"
+    <!-- Scrollable recipe content -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/cream"
+        android:fillViewport="true">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Recipe Name"
-            android:textSize="28sp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:layout_marginBottom="24dp" />
+            android:orientation="vertical"
+            android:padding="24dp"
+            android:background="@color/cream">
 
-        <TextView
-            android:id="@+id/ingredientsTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Ingredients"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="12dp" />
+            <TextView
+                android:id="@+id/recipeDetailTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Recipe Name"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:fontFamily="serif"
+                android:textColor="@color/brown"
+                android:gravity="center"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="32dp" />
 
-        <TextView
-            android:id="@+id/recipeIngredients"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="17sp"
-            android:layout_marginBottom="24dp" />
+            <TextView
+                android:id="@+id/ingredientsTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Ingredients"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:fontFamily="serif"
+                android:textColor="@color/brown"
+                android:layout_marginBottom="12dp" />
 
-        <TextView
-            android:id="@+id/stepsTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Method"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="12dp" />
+            <TextView
+                android:id="@+id/recipeIngredients"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="17sp"
+                android:textColor="@color/brown_light"
+                android:lineSpacingExtra="4dp"
+                android:layout_marginBottom="30dp" />
 
-        <TextView
-            android:id="@+id/recipeSteps"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="17sp"
-            android:layout_marginBottom="24dp" />
+            <TextView
+                android:id="@+id/stepsTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Method"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:fontFamily="serif"
+                android:textColor="@color/brown"
+                android:layout_marginBottom="12dp" />
 
-        <Button
-            android:id="@+id/backToRecipesButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Back to Recipes" />
+            <TextView
+                android:id="@+id/recipeSteps"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="17sp"
+                android:textColor="@color/brown_light"
+                android:lineSpacingExtra="5dp"
+                android:layout_marginBottom="30dp" />
 
-    </LinearLayout>
+            <Button
+                android:id="@+id/backToRecipesButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Back to Recipes"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textAllCaps="false"
+                android:backgroundTint="@color/sage"
+                android:layout_marginBottom="35dp" />
 
-</ScrollView>
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

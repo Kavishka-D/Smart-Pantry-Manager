@@ -1,74 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/cream">
 
-    <LinearLayout
+    <!-- Fixed dark sage area behind the notification/status bar -->
+    <View
+        android:id="@+id/statusBarBackground"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:padding="24dp">
+        android:layout_height="0dp"
+        android:background="@color/sage_dark" />
 
-        <TextView
+    <!-- Scrollable settings content -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/cream"
+        android:fillViewport="true">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Settings &amp; Profile"
-            android:textSize="28sp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:layout_marginBottom="24dp" />
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:padding="24dp"
+            android:background="@color/cream">
 
-        <ImageView
-            android:id="@+id/settingsProfileImage"
-            android:layout_width="140dp"
-            android:layout_height="140dp"
-            android:src="@drawable/ic_launcher_foreground"
-            android:background="@drawable/circle_profile"
-            android:scaleType="centerCrop"
-            android:clipToOutline="true"
-            android:contentDescription="Profile picture"
-            android:layout_marginBottom="16dp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Settings &amp; Profile"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:fontFamily="serif"
+                android:textColor="@color/brown"
+                android:gravity="center"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="28dp" />
 
-        <Button
-            android:id="@+id/changePhotoButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Change Profile Picture"
-            android:layout_marginBottom="24dp" />
+            <ImageView
+                android:id="@+id/settingsProfileImage"
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                android:src="@drawable/ic_launcher_foreground"
+                android:background="@drawable/circle_profile"
+                android:scaleType="centerCrop"
+                android:clipToOutline="true"
+                android:contentDescription="Profile picture"
+                android:layout_marginBottom="16dp" />
 
-        <Switch
-            android:id="@+id/expiryAlertSwitch"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Expiring-soon alerts"
-            android:textSize="18sp"
-            android:layout_marginBottom="20dp" />
+            <Button
+                android:id="@+id/changePhotoButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Change Profile Picture"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textAllCaps="false"
+                android:backgroundTint="@color/sage"
+                android:layout_marginBottom="28dp" />
 
-        <EditText
-            android:id="@+id/settingsNameInput"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Your name"
-            android:inputType="textPersonName"
-            android:importantForAutofill="no"
-            android:layout_marginBottom="20dp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Preferences"
+                android:textSize="21sp"
+                android:textStyle="bold"
+                android:fontFamily="serif"
+                android:textColor="@color/brown"
+                android:layout_marginBottom="8dp" />
 
-        <Button
-            android:id="@+id/saveProfileButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Save Profile"
-            android:layout_marginBottom="16dp" />
+            <Switch
+                android:id="@+id/expiryAlertSwitch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Expiring-soon alerts"
+                android:textSize="18sp"
+                android:textColor="@color/brown"
+                android:layout_marginBottom="28dp" />
 
-        <Button
-            android:id="@+id/backToHomeButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Back to Home" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Profile Information"
+                android:textSize="21sp"
+                android:textStyle="bold"
+                android:fontFamily="serif"
+                android:textColor="@color/brown"
+                android:layout_marginBottom="8dp" />
 
-    </LinearLayout>
+            <EditText
+                android:id="@+id/settingsNameInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Your name"
+                android:textColor="@color/brown"
+                android:textColorHint="@color/brown_light"
+                android:inputType="textPersonName"
+                android:importantForAutofill="no"
+                android:backgroundTint="@color/sage"
+                android:padding="12dp"
+                android:layout_marginBottom="24dp" />
 
-</ScrollView>
+            <Button
+                android:id="@+id/saveProfileButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Save Profile"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textAllCaps="false"
+                android:backgroundTint="@color/sage"
+                android:layout_marginBottom="12dp" />
+
+            <Button
+                android:id="@+id/backToHomeButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Back to Home"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textAllCaps="false"
+                android:backgroundTint="@color/sage_dark"
+                android:layout_marginBottom="35dp" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

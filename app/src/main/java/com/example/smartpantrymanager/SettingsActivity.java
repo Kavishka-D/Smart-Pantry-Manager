@@ -3,9 +3,12 @@ package com.example.smartpantrymanager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -13,6 +16,8 @@ import android.widget.Switch;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -33,7 +38,41 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Window window = getWindow();
+
+        // Make the actual Android status bar transparent.
+        // The sage view underneath it provides the green background.
+        window.setStatusBarColor(Color.TRANSPARENT);
+
         setContentView(R.layout.activity_settings);
+
+        View statusBarBackground =
+                findViewById(R.id.statusBarBackground);
+
+        // Make the sage area the status-bar height
+        // plus a little extra space.
+        ViewCompat.setOnApplyWindowInsetsListener(
+                statusBarBackground,
+                (v, insets) -> {
+
+                    int statusBarHeight =
+                            insets.getInsets(
+                                    WindowInsetsCompat.Type.statusBars()
+                            ).top;
+
+                    v.getLayoutParams().height =
+                            statusBarHeight + 15;
+
+                    v.requestLayout();
+
+                    return insets;
+                }
+        );
+
+        ViewCompat.requestApplyInsets(
+                statusBarBackground
+        );
 
         profileImage =
                 findViewById(R.id.settingsProfileImage);

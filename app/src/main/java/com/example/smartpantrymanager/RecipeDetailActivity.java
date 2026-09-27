@@ -2,11 +2,16 @@ package com.example.smartpantrymanager;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import com.example.smartpantrymanager.database.DatabaseHelper;
 
@@ -24,7 +29,41 @@ public class RecipeDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Window window = getWindow();
+
+        // Make the actual Android status bar transparent.
+        // The sage view underneath it provides the green background.
+        window.setStatusBarColor(Color.TRANSPARENT);
+
         setContentView(R.layout.activity_recipe_detail);
+
+        View statusBarBackground =
+                findViewById(R.id.statusBarBackground);
+
+        // Make the sage area the status-bar height
+        // plus a little extra space.
+        ViewCompat.setOnApplyWindowInsetsListener(
+                statusBarBackground,
+                (v, insets) -> {
+
+                    int statusBarHeight =
+                            insets.getInsets(
+                                    WindowInsetsCompat.Type.statusBars()
+                            ).top;
+
+                    v.getLayoutParams().height =
+                            statusBarHeight + 15;
+
+                    v.requestLayout();
+
+                    return insets;
+                }
+        );
+
+        ViewCompat.requestApplyInsets(
+                statusBarBackground
+        );
 
         recipeDetailTitle =
                 findViewById(R.id.recipeDetailTitle);

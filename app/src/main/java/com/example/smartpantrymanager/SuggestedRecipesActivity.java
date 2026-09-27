@@ -3,12 +3,17 @@ package com.example.smartpantrymanager;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import com.example.smartpantrymanager.database.DatabaseHelper;
 
@@ -31,7 +36,41 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Window window = getWindow();
+
+        // Make the actual Android status bar transparent.
+        // The sage view underneath it provides the green background.
+        window.setStatusBarColor(Color.TRANSPARENT);
+
         setContentView(R.layout.activity_suggested_recipes);
+
+        View statusBarBackground =
+                findViewById(R.id.statusBarBackground);
+
+        // Make the sage area the status-bar height
+        // plus a little extra space.
+        ViewCompat.setOnApplyWindowInsetsListener(
+                statusBarBackground,
+                (v, insets) -> {
+
+                    int statusBarHeight =
+                            insets.getInsets(
+                                    WindowInsetsCompat.Type.statusBars()
+                            ).top;
+
+                    v.getLayoutParams().height =
+                            statusBarHeight + 15;
+
+                    v.requestLayout();
+
+                    return insets;
+                }
+        );
+
+        ViewCompat.requestApplyInsets(
+                statusBarBackground
+        );
 
         recipeList =
                 findViewById(R.id.recipeList);
@@ -513,16 +552,37 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
             LinearLayout targetList
     ) {
 
-        Button recipeButton =
-                new Button(this);
+        View recipeCard =
+                getLayoutInflater().inflate(
+                        R.layout.recipe_card,
+                        targetList,
+                        false
+                );
 
-        recipeButton.setText(
+        TextView recipeNameText =
+                recipeCard.findViewById(
+                        R.id.recipeCardName
+                );
+
+        TextView descriptionText =
+                recipeCard.findViewById(
+                        R.id.recipeCardDescription
+                );
+
+        Button viewRecipeButton =
+                recipeCard.findViewById(
+                        R.id.viewRecipeButton
+                );
+
+        recipeNameText.setText(
                 recipeName
         );
 
-        recipeButton.setTextSize(18);
+        descriptionText.setText(
+                "You have all the ingredients needed."
+        );
 
-        recipeButton.setOnClickListener(v -> {
+        viewRecipeButton.setOnClickListener(v -> {
 
             Intent intent =
                     new Intent(
@@ -539,7 +599,7 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
         });
 
         targetList.addView(
-                recipeButton
+                recipeCard
         );
     }
 
@@ -549,18 +609,44 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
             String missingIngredient
     ) {
 
-        Button recipeButton =
-                new Button(this);
+        View recipeCard =
+                getLayoutInflater().inflate(
+                        R.layout.recipe_card,
+                        almostThereList,
+                        false
+                );
 
-        recipeButton.setText(
+        TextView recipeNameText =
+                recipeCard.findViewById(
+                        R.id.recipeCardName
+                );
+
+        TextView descriptionText =
+                recipeCard.findViewById(
+                        R.id.recipeCardDescription
+                );
+
+        Button viewRecipeButton =
+                recipeCard.findViewById(
+                        R.id.viewRecipeButton
+                );
+
+        recipeNameText.setText(
                 recipeName
-                        + "\nMissing: "
+        );
+
+        descriptionText.setText(
+                "Missing only: "
                         + missingIngredient
         );
 
-        recipeButton.setTextSize(17);
+        viewRecipeButton.setBackgroundTintList(
+                android.content.res.ColorStateList.valueOf(
+                        getColor(R.color.sage_dark)
+                )
+        );
 
-        recipeButton.setOnClickListener(v -> {
+        viewRecipeButton.setOnClickListener(v -> {
 
             Intent intent =
                     new Intent(
@@ -577,7 +663,7 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
         });
 
         almostThereList.addView(
-                recipeButton
+                recipeCard
         );
     }
 
