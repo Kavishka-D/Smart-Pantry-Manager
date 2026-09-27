@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
+
+    <color name="sage">#4F6F52</color>
+    <color name="sage_dark">#3E5941</color>
+
+    <color name="cream">#F7F3EA</color>
+    <color name="cream_dark">#E4DED1</color>
+
+    <color name="brown">#34382F</color>
+    <color name="brown_light">#65695F</color>
+
     <color name="white">#FFFFFFFF</color>
+    <color name="black">#FF000000</color>
+
 </resources>

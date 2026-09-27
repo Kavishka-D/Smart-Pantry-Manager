@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -89,6 +90,37 @@ public class MainActivity extends AppCompatActivity {
 
         navigationView =
                 findViewById(R.id.navigationView);
+
+        // Move drawer menu items to the bottom
+        navigationView.post(() -> {
+
+            if (navigationView.getChildCount() > 0) {
+
+                View menuView =
+                        navigationView.getChildAt(
+                                navigationView.getChildCount() - 1
+                        );
+
+                int menuHeight =
+                        menuView.getMeasuredHeight();
+
+                int availableHeight =
+                        navigationView.getHeight();
+
+                int topSpace =
+                        availableHeight - menuHeight;
+
+                if (topSpace > 0) {
+
+                    menuView.setPadding(
+                            menuView.getPaddingLeft(),
+                            topSpace,
+                            menuView.getPaddingRight(),
+                            menuView.getPaddingBottom()
+                    );
+                }
+            }
+        });
 
         // Welcome message
         TextView welcomeMessage =
