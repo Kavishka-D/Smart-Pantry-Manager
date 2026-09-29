@@ -285,6 +285,42 @@ public class AddEditIngredientActivity extends AppCompatActivity {
             return;
         }
 
+        String normalisedUnit =
+                unit.toLowerCase().trim();
+
+        if (!normalisedUnit.equals("g")
+                && !normalisedUnit.equals("gram")
+                && !normalisedUnit.equals("grams")
+                && !normalisedUnit.equals("kg")
+                && !normalisedUnit.equals("kilogram")
+                && !normalisedUnit.equals("kilograms")
+                && !normalisedUnit.equals("ml")
+                && !normalisedUnit.equals("milliliter")
+                && !normalisedUnit.equals("milliliters")
+                && !normalisedUnit.equals("millilitre")
+                && !normalisedUnit.equals("millilitres")
+                && !normalisedUnit.equals("l")
+                && !normalisedUnit.equals("liter")
+                && !normalisedUnit.equals("liters")
+                && !normalisedUnit.equals("litre")
+                && !normalisedUnit.equals("litres")
+                && !normalisedUnit.equals("cup")
+                && !normalisedUnit.equals("cups")
+                && !normalisedUnit.equals("tbsp")
+                && !normalisedUnit.equals("tablespoon")
+                && !normalisedUnit.equals("tablespoons")
+                && !normalisedUnit.equals("tsp")
+                && !normalisedUnit.equals("teaspoon")
+                && !normalisedUnit.equals("teaspoons")) {
+
+            ingredientUnitInput.setError(
+                    "Enter a valid unit such as g, kg, ml, L, cup, tbsp or tsp"
+            );
+
+            ingredientUnitInput.requestFocus();
+            return;
+        }
+
         double quantity;
 
         try {
