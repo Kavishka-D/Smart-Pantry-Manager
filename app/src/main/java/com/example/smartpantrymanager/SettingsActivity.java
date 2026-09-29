@@ -3,11 +3,9 @@ package com.example.smartpantrymanager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,24 +13,20 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.appcompat.widget.Toolbar;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends BaseDrawerActivity {
 
     private static final int PICK_IMAGE = 101;
 
     private ImageView profileImage;
     private EditText nameInput;
     private Switch expiryAlertSwitch;
-
     private Uri selectedImageUri;
-
     private SharedPreferences preferences;
 
     @Override
@@ -41,39 +35,27 @@ public class SettingsActivity extends AppCompatActivity {
 
         Window window = getWindow();
 
-        // Make the actual Android status bar transparent.
-        // The sage view underneath it provides the green background.
-        window.setStatusBarColor(Color.TRANSPARENT);
+        // Make the Android status bar sage green.
+        window.setStatusBarColor(
+                getColor(R.color.sage_dark)
+        );
 
         setContentView(R.layout.activity_settings);
 
-        View statusBarBackground =
-                findViewById(R.id.statusBarBackground);
+        // Toolbar
+        Toolbar toolbar =
+                findViewById(R.id.mainToolbar);
 
-        // Make the sage area the status-bar height
-        // plus a little extra space.
-        ViewCompat.setOnApplyWindowInsetsListener(
-                statusBarBackground,
-                (v, insets) -> {
+        setupDrawer(toolbar);
 
-                    int statusBarHeight =
-                            insets.getInsets(
-                                    WindowInsetsCompat.Type.statusBars()
-                            ).top;
-
-                    v.getLayoutParams().height =
-                            statusBarHeight + 15;
-
-                    v.requestLayout();
-
-                    return insets;
-                }
+        toolbar.setTitleTextAppearance(
+                this,
+                R.style.ToolbarTitleSmall
         );
 
-        ViewCompat.requestApplyInsets(
-                statusBarBackground
-        );
+        setTitle("Smart Pantry Manager");
 
+        // Find views
         profileImage =
                 findViewById(R.id.settingsProfileImage);
 
@@ -92,12 +74,14 @@ public class SettingsActivity extends AppCompatActivity {
         Button backToHomeButton =
                 findViewById(R.id.backToHomeButton);
 
+        // Shared Preferences
         preferences =
                 getSharedPreferences(
                         "SmartPantryPreferences",
                         MODE_PRIVATE
                 );
 
+        // Load saved name
         String savedName =
                 preferences.getString(
                         "user_name",
@@ -106,6 +90,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         nameInput.setText(savedName);
 
+        // Load expiry alert setting
         boolean expiryAlertsEnabled =
                 preferences.getBoolean(
                         "expiry_alerts_enabled",
@@ -116,6 +101,7 @@ public class SettingsActivity extends AppCompatActivity {
                 expiryAlertsEnabled
         );
 
+        // Load saved profile picture
         String savedImage =
                 preferences.getString(
                         "profile_image",
@@ -138,12 +124,14 @@ public class SettingsActivity extends AppCompatActivity {
             }
         }
 
+        // Change profile picture
         changePhotoButton.setOnClickListener(v -> {
 
-            Intent intent = new Intent(
-                    Intent.ACTION_PICK,
-                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-            );
+            Intent intent =
+                    new Intent(
+                            Intent.ACTION_PICK,
+                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                    );
 
             startActivityForResult(
                     intent,
@@ -151,6 +139,7 @@ public class SettingsActivity extends AppCompatActivity {
             );
         });
 
+        // Save profile
         saveProfileButton.setOnClickListener(v -> {
 
             String name =
@@ -165,6 +154,7 @@ public class SettingsActivity extends AppCompatActivity {
                 );
 
                 nameInput.requestFocus();
+
                 return;
             }
 
@@ -205,23 +195,28 @@ public class SettingsActivity extends AppCompatActivity {
                     Toast.LENGTH_SHORT
             ).show();
 
-            Intent intent = new Intent(
-                    SettingsActivity.this,
-                    MainActivity.class
-            );
+            Intent intent =
+                    new Intent(
+                            SettingsActivity.this,
+                            MainActivity.class
+                    );
 
             startActivity(intent);
+
             finish();
         });
 
+        // Back to Home
         backToHomeButton.setOnClickListener(v -> {
 
-            Intent intent = new Intent(
-                    SettingsActivity.this,
-                    MainActivity.class
-            );
+            Intent intent =
+                    new Intent(
+                            SettingsActivity.this,
+                            MainActivity.class
+                    );
 
             startActivity(intent);
+
             finish();
         });
     }
@@ -275,6 +270,7 @@ public class SettingsActivity extends AppCompatActivity {
             int resultCode,
             Intent data
     ) {
+
         super.onActivityResult(
                 requestCode,
                 resultCode,

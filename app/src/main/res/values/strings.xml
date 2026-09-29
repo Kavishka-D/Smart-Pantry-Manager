@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Smart Pantry Manager</string>
     <string name="app_title">Smart Pantry Manager</string>
-    <string name="app_subtitle">Manage your pantry items easily</string>
+    <string name="app_subtitle">Keep track of what you have and find recipes with ease!</string>
     <string name="add_pantry_item">Add Pantry Item</string>
     <string name="ingredient_name">Ingredient name</string>
     <string name="quantity">Quantity</string>

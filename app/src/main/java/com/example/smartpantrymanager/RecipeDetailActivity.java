@@ -32,8 +32,6 @@ public class RecipeDetailActivity extends AppCompatActivity {
 
         Window window = getWindow();
 
-        // Make the actual Android status bar transparent.
-        // The sage view underneath it provides the green background.
         window.setStatusBarColor(Color.TRANSPARENT);
 
         setContentView(R.layout.activity_recipe_detail);
@@ -41,8 +39,6 @@ public class RecipeDetailActivity extends AppCompatActivity {
         View statusBarBackground =
                 findViewById(R.id.statusBarBackground);
 
-        // Make the sage area the status-bar height
-        // plus a little extra space.
         ViewCompat.setOnApplyWindowInsetsListener(
                 statusBarBackground,
                 (v, insets) -> {

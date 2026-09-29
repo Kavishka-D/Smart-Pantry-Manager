@@ -38,8 +38,6 @@ public class AddEditIngredientActivity extends AppCompatActivity {
 
         Window window = getWindow();
 
-        // Make the actual Android status bar transparent.
-        // The sage view underneath it provides the green background.
         window.setStatusBarColor(Color.TRANSPARENT);
 
         setContentView(R.layout.activity_add_edit_ingredient);
@@ -47,8 +45,6 @@ public class AddEditIngredientActivity extends AppCompatActivity {
         View statusBarBackground =
                 findViewById(R.id.statusBarBackground);
 
-        // Make the sage area exactly the height of the
-        // notification/status bar, with a little extra space.
         ViewCompat.setOnApplyWindowInsetsListener(
                 statusBarBackground,
                 (v, insets) -> {

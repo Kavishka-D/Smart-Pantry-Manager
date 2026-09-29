@@ -4,27 +4,17 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.google.android.material.navigation.NavigationView;
-
-public class MainActivity extends AppCompatActivity {
-
-    private DrawerLayout drawerLayout;
-    private NavigationView navigationView;
+public class MainActivity extends BaseDrawerActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,71 +46,14 @@ public class MainActivity extends AppCompatActivity {
         }
 
         EdgeToEdge.enable(this);
+
         setContentView(R.layout.activity_main);
 
         // Toolbar
         Toolbar toolbar =
                 findViewById(R.id.mainToolbar);
 
-        ViewCompat.setOnApplyWindowInsetsListener(
-                toolbar,
-                (v, insets) -> {
-
-                    Insets systemBars =
-                            insets.getInsets(
-                                    WindowInsetsCompat.Type.systemBars()
-                            );
-
-                    v.setPadding(
-                            0,
-                            systemBars.top,
-                            0,
-                            0
-                    );
-
-                    return insets;
-                }
-        );
-
-        setSupportActionBar(toolbar);
-
-        // Navigation drawer
-        drawerLayout =
-                findViewById(R.id.drawerLayout);
-
-        navigationView =
-                findViewById(R.id.navigationView);
-
-        // Move drawer menu items to the bottom
-        navigationView.post(() -> {
-
-            if (navigationView.getChildCount() > 0) {
-
-                View menuView =
-                        navigationView.getChildAt(
-                                navigationView.getChildCount() - 1
-                        );
-
-                int menuHeight =
-                        menuView.getMeasuredHeight();
-
-                int availableHeight =
-                        navigationView.getHeight();
-
-                int topSpace =
-                        availableHeight - menuHeight;
-
-                if (topSpace > 0) {
-
-                    menuView.setPadding(
-                            menuView.getPaddingLeft(),
-                            topSpace,
-                            menuView.getPaddingRight(),
-                            menuView.getPaddingBottom()
-                    );
-                }
-            }
-        });
+        setupDrawer(toolbar);
 
         // Welcome message
         TextView welcomeMessage =
@@ -175,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
         Button settingsButton =
                 findViewById(R.id.settingsButton);
 
-        // Open Add Ingredient screen
+        // Add Ingredient
         addIngredientButton.setOnClickListener(v -> {
 
             Intent intent = new Intent(
@@ -186,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // Open Pantry screen
+        // View Pantry
         viewPantryButton.setOnClickListener(v -> {
 
             Intent intent = new Intent(
@@ -197,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // Open Suggested Recipes screen
+        // View Suggested Recipes
         viewRecipesButton.setOnClickListener(v -> {
 
             Intent intent = new Intent(
@@ -208,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // Open Settings/Profile screen
+        // Settings & Profile
         settingsButton.setOnClickListener(v -> {
 
             Intent intent = new Intent(
@@ -217,59 +150,6 @@ public class MainActivity extends AppCompatActivity {
             );
 
             startActivity(intent);
-        });
-
-        // Navigation drawer menu
-        navigationView.setNavigationItemSelectedListener(item -> {
-
-            int itemId =
-                    item.getItemId();
-
-            if (itemId == R.id.nav_home) {
-
-                drawerLayout.closeDrawer(
-                        navigationView
-                );
-
-                return true;
-            }
-
-            if (itemId == R.id.nav_pantry) {
-
-                Intent intent =
-                        new Intent(
-                                MainActivity.this,
-                                PantryActivity.class
-                        );
-
-                startActivity(intent);
-
-            } else if (itemId == R.id.nav_recipes) {
-
-                Intent intent =
-                        new Intent(
-                                MainActivity.this,
-                                SuggestedRecipesActivity.class
-                        );
-
-                startActivity(intent);
-
-            } else if (itemId == R.id.nav_settings) {
-
-                Intent intent =
-                        new Intent(
-                                MainActivity.this,
-                                SettingsActivity.class
-                        );
-
-                startActivity(intent);
-            }
-
-            drawerLayout.closeDrawer(
-                    navigationView
-            );
-
-            return true;
         });
 
         // Handle system window insets for main content
@@ -292,42 +172,5 @@ public class MainActivity extends AppCompatActivity {
                     return insets;
                 }
         );
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        MenuItem menuItem =
-                menu.add("Open Menu");
-
-        menuItem.setIcon(
-                R.drawable.ic_menu
-        );
-
-        menuItem.setShowAsAction(
-                MenuItem.SHOW_AS_ACTION_ALWAYS
-        );
-
-        menuItem.setOnMenuItemClickListener(item -> {
-
-            if (drawerLayout.isDrawerOpen(
-                    navigationView
-            )) {
-
-                drawerLayout.closeDrawer(
-                        navigationView
-                );
-
-            } else {
-
-                drawerLayout.openDrawer(
-                        navigationView
-                );
-            }
-
-            return true;
-        });
-
-        return true;
     }
 }

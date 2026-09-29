@@ -11,10 +11,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-
+import androidx.appcompat.widget.Toolbar;
 import com.example.smartpantrymanager.database.DatabaseHelper;
 
 import java.util.ArrayList;
@@ -22,7 +19,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-public class SuggestedRecipesActivity extends AppCompatActivity {
+public class SuggestedRecipesActivity extends BaseDrawerActivity {
 
     private DatabaseHelper databaseHelper;
     private SQLiteDatabase database;
@@ -39,38 +36,16 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
 
         Window window = getWindow();
 
-        // Make the actual Android status bar transparent.
-        // The sage view underneath it provides the green background.
         window.setStatusBarColor(Color.TRANSPARENT);
 
         setContentView(R.layout.activity_suggested_recipes);
 
-        View statusBarBackground =
-                findViewById(R.id.statusBarBackground);
+        // Toolbar
+        Toolbar toolbar =
+                findViewById(R.id.mainToolbar);
 
-        // Make the sage area the status-bar height
-        // plus a little extra space.
-        ViewCompat.setOnApplyWindowInsetsListener(
-                statusBarBackground,
-                (v, insets) -> {
+        setupDrawer(toolbar);
 
-                    int statusBarHeight =
-                            insets.getInsets(
-                                    WindowInsetsCompat.Type.statusBars()
-                            ).top;
-
-                    v.getLayoutParams().height =
-                            statusBarHeight + 15;
-
-                    v.requestLayout();
-
-                    return insets;
-                }
-        );
-
-        ViewCompat.requestApplyInsets(
-                statusBarBackground
-        );
 
         recipeList =
                 findViewById(R.id.recipeList);

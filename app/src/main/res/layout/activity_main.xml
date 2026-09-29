@@ -17,109 +17,118 @@
         android:orientation="vertical"
         android:background="@color/cream">
 
+        <!-- Toolbar -->
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/mainToolbar"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="85dp"
             android:background="@color/sage"
             android:title="Smart Pantry Manager"
             android:titleTextColor="@color/white" />
 
-        <ScrollView
-            android:id="@+id/main"
+        <!-- Homepage content -->
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:fillViewport="true"
             android:background="@color/cream">
 
-            <LinearLayout
+            <ScrollView
+                android:id="@+id/main"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center_horizontal"
-                android:padding="24dp">
+                android:layout_height="match_parent"
+                android:fillViewport="true"
+                android:background="@color/cream">
 
-                <ImageView
-                    android:id="@+id/homeProfileImage"
-                    android:layout_width="110dp"
-                    android:layout_height="110dp"
-                    android:src="@drawable/ic_launcher_foreground"
-                    android:background="@drawable/circle_profile"
-                    android:scaleType="centerCrop"
-                    android:clipToOutline="true"
-                    android:contentDescription="Profile picture"
-                    android:layout_marginBottom="12dp" />
-
-                <TextView
-                    android:id="@+id/welcomeMessage"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Welcome!"
-                    android:textSize="26sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/brown"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
                     android:gravity="center"
-                    android:layout_marginBottom="24dp" />
+                    android:padding="24dp">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/app_title"
-                    android:textSize="28sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/brown"
-                    android:gravity="center"
-                    android:layout_marginBottom="8dp" />
+                    <ImageView
+                        android:id="@+id/homeProfileImage"
+                        android:layout_width="110dp"
+                        android:layout_height="110dp"
+                        android:src="@drawable/ic_profile"
+                        android:background="@drawable/circle_profile"
+                        android:scaleType="centerCrop"
+                        android:clipToOutline="true"
+                        android:contentDescription="Profile picture"
+                        android:layout_marginBottom="12dp" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/app_subtitle"
-                    android:textSize="16sp"
-                    android:textColor="@color/brown_light"
-                    android:gravity="center"
-                    android:layout_marginBottom="32dp" />
+                    <TextView
+                        android:id="@+id/welcomeMessage"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Welcome!"
+                        android:textSize="26sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/brown"
+                        android:gravity="center"
+                        android:layout_marginBottom="24dp" />
 
-                <Button
-                    android:id="@+id/addIngredientButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Add Pantry Ingredient"
-                    android:textColor="@color/white"
-                    android:backgroundTint="@color/sage"
-                    android:layout_marginBottom="12dp" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/app_title"
+                        android:textSize="28sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/brown"
+                        android:gravity="center"
+                        android:layout_marginBottom="8dp" />
 
-                <Button
-                    android:id="@+id/viewPantryButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="View Pantry"
-                    android:textColor="@color/white"
-                    android:backgroundTint="@color/sage"
-                    android:layout_marginBottom="12dp" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/app_subtitle"
+                        android:textSize="16sp"
+                        android:textColor="@color/brown_light"
+                        android:gravity="center"
+                        android:layout_marginBottom="32dp" />
 
-                <Button
-                    android:id="@+id/viewRecipesButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/view_suggested_recipes"
-                    android:textColor="@color/white"
-                    android:backgroundTint="@color/sage"
-                    android:layout_marginBottom="12dp" />
+                    <Button
+                        android:id="@+id/addIngredientButton"
+                        android:layout_width="300dp"
+                        android:layout_height="wrap_content"
+                        android:text="Add Ingredient"
+                        android:textColor="@color/white"
+                        android:backgroundTint="@color/sage"
+                        android:layout_marginBottom="12dp" />
 
-                <Button
-                    android:id="@+id/settingsButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Settings &amp; Profile"
-                    android:textColor="@color/white"
-                    android:backgroundTint="@color/sage"
-                    android:layout_marginBottom="16dp" />
+                    <Button
+                        android:id="@+id/viewPantryButton"
+                        android:layout_width="300dp"
+                        android:layout_height="wrap_content"
+                        android:text="My Pantry"
+                        android:textColor="@color/white"
+                        android:backgroundTint="@color/sage"
+                        android:layout_marginBottom="12dp" />
 
-            </LinearLayout>
+                    <Button
+                        android:id="@+id/viewRecipesButton"
+                        android:layout_width="300dp"
+                        android:layout_height="wrap_content"
+                        android:text="Suggested Recipes"
+                        android:textColor="@color/white"
+                        android:backgroundTint="@color/sage"
+                        android:layout_marginBottom="12dp" />
 
-        </ScrollView>
+                    <Button
+                        android:id="@+id/settingsButton"
+                        android:layout_width="300dp"
+                        android:layout_height="wrap_content"
+                        android:text="Settings &amp; Profile"
+                        android:textColor="@color/white"
+                        android:backgroundTint="@color/sage"
+                        android:layout_marginBottom="16dp" />
+
+                </LinearLayout>
+
+            </ScrollView>
+
+        </FrameLayout>
 
     </LinearLayout>
 
@@ -130,9 +139,9 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="@color/cream"
-        app:headerLayout="@layout/drawer_header"
         app:itemTextColor="@color/brown"
         app:itemIconTint="@color/sage"
         app:menu="@menu/drawer_menu" />
 
 </androidx.drawerlayout.widget.DrawerLayout>
+

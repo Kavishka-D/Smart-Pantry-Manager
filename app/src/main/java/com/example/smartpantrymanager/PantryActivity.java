@@ -6,17 +6,13 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.View;
 import android.view.Window;
-
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -29,7 +25,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class PantryActivity extends AppCompatActivity {
+public class PantryActivity extends BaseDrawerActivity {
 
     private RecyclerView pantryRecyclerView;
     private TextView noItemsMessage;
@@ -46,38 +42,15 @@ public class PantryActivity extends AppCompatActivity {
 
         Window window = getWindow();
 
-        // Make the actual Android status bar transparent.
-        // The sage view underneath it provides the green background.
         window.setStatusBarColor(Color.TRANSPARENT);
 
         setContentView(R.layout.activity_pantry);
 
-        View statusBarBackground =
-                findViewById(R.id.statusBarBackground);
+        // Toolbar
+        Toolbar toolbar =
+                findViewById(R.id.mainToolbar);
 
-        // Make the sage view exactly the height of the
-        // notification/status bar.
-        ViewCompat.setOnApplyWindowInsetsListener(
-                statusBarBackground,
-                (v, insets) -> {
-
-                    int statusBarHeight =
-                            insets.getInsets(
-                                    WindowInsetsCompat.Type.statusBars()
-                            ).top;
-
-                    v.getLayoutParams().height =
-                            statusBarHeight + 20;
-
-                    v.requestLayout();
-
-                    return insets;
-                }
-        );
-
-        ViewCompat.requestApplyInsets(
-                statusBarBackground
-        );
+        setupDrawer(toolbar);
 
         pantryRecyclerView =
                 findViewById(R.id.pantryRecyclerView);
@@ -141,7 +114,6 @@ public class PantryActivity extends AppCompatActivity {
     }
 
     private void loadPantryItems() {
-
         pantryItems.clear();
 
         Cursor cursor =
@@ -165,37 +137,27 @@ public class PantryActivity extends AppCompatActivity {
 
             int id =
                     cursor.getInt(
-                            cursor.getColumnIndexOrThrow(
-                                    "id"
-                            )
+                            cursor.getColumnIndexOrThrow("id")
                     );
 
             String name =
                     cursor.getString(
-                            cursor.getColumnIndexOrThrow(
-                                    "name"
-                            )
+                            cursor.getColumnIndexOrThrow("name")
                     );
 
             double quantity =
                     cursor.getDouble(
-                            cursor.getColumnIndexOrThrow(
-                                    "quantity"
-                            )
+                            cursor.getColumnIndexOrThrow("quantity")
                     );
 
             String unit =
                     cursor.getString(
-                            cursor.getColumnIndexOrThrow(
-                                    "unit"
-                            )
+                            cursor.getColumnIndexOrThrow("unit")
                     );
 
             String expiryDate =
                     cursor.getString(
-                            cursor.getColumnIndexOrThrow(
-                                    "expiry_date"
-                            )
+                            cursor.getColumnIndexOrThrow("expiry_date")
                     );
 
             PantryItem item =
@@ -284,9 +246,7 @@ public class PantryActivity extends AppCompatActivity {
             try {
 
                 Date expiry =
-                        dateFormat.parse(
-                                expiryDate
-                        );
+                        dateFormat.parse(expiryDate);
 
                 if (expiry == null) {
                     continue;
@@ -295,9 +255,7 @@ public class PantryActivity extends AppCompatActivity {
                 Calendar expiryCalendar =
                         Calendar.getInstance();
 
-                expiryCalendar.setTime(
-                        expiry
-                );
+                expiryCalendar.setTime(expiry);
 
                 if (!expiryCalendar.before(today)
                         && !expiryCalendar.after(
@@ -312,7 +270,6 @@ public class PantryActivity extends AppCompatActivity {
                 }
 
             } catch (ParseException e) {
-
                 // Ignore invalid expiry dates.
             }
         }
