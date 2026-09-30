@@ -350,42 +350,21 @@ public class AddEditIngredientActivity extends AppCompatActivity {
             return;
         }
 
-        ContentValues values =
-                new ContentValues();
+        ContentValues values = new ContentValues();
 
-        values.put(
-                "name",
-                name
-        );
-
-        values.put(
-                "quantity",
-                quantity
-        );
-
-        values.put(
-                "unit",
-                unit
-        );
+        values.put("name", name);
+        values.put("quantity", quantity);
+        values.put("unit", unit);
 
         if (expiryDate.isEmpty()) {
-
-            values.putNull(
-                    "expiry_date"
-            );
-
+            values.putNull("expiry_date");
         } else {
-
-            values.put(
-                    "expiry_date",
-                    expiryDate
-            );
+            values.put("expiry_date", expiryDate);
         }
 
         if (ingredientId == -1) {
 
-            long result =
-                    database.insert(
+            long result = database.insert(
                             "pantry",
                             null,
                             values

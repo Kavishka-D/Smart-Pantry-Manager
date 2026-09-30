@@ -369,37 +369,27 @@ public class SuggestedRecipesActivity extends BaseDrawerActivity {
             String name
     ) {
 
-        String normalised =
-                name.trim()
+        String normalised = name.trim()
                         .toLowerCase(Locale.ROOT);
 
         if (normalised.endsWith("ies")
                 && normalised.length() > 3) {
 
-            normalised =
-                    normalised.substring(
-                            0,
-                            normalised.length() - 3
+            normalised = normalised.substring( 0, normalised.length() - 3
                     )
                             + "y";
 
         } else if (normalised.endsWith("es")
                 && normalised.length() > 2) {
 
-            normalised =
-                    normalised.substring(
-                            0,
-                            normalised.length() - 2
+            normalised = normalised.substring( 0, normalised.length() - 2
                     );
 
         } else if (normalised.endsWith("s")
                 && !normalised.endsWith("ss")
                 && normalised.length() > 1) {
 
-            normalised =
-                    normalised.substring(
-                            0,
-                            normalised.length() - 1
+            normalised = normalised.substring( 0, normalised.length() - 1
                     );
         }
 

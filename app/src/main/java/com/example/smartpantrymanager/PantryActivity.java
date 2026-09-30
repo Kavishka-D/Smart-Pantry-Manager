@@ -116,8 +116,7 @@ public class PantryActivity extends BaseDrawerActivity {
     private void loadPantryItems() {
         pantryItems.clear();
 
-        Cursor cursor =
-                database.query(
+        Cursor cursor = database.query(
                         "pantry",
                         new String[]{
                                 "id",
