@@ -13,6 +13,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class ProfileSetupActivity extends AppCompatActivity {
@@ -72,10 +74,17 @@ public class ProfileSetupActivity extends AppCompatActivity {
             editor.putString("user_name", name);
 
             if (selectedImageUri != null) {
-                editor.putString(
-                        "profile_image",
-                        selectedImageUri.toString()
-                );
+
+                String savedImagePath =
+                        saveImageToInternalStorage(selectedImageUri);
+
+                if (savedImagePath != null) {
+
+                    editor.putString(
+                            "profile_image",
+                            savedImagePath
+                    );
+                }
             }
 
             editor.putBoolean(
@@ -99,6 +108,47 @@ public class ProfileSetupActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
+    }
+
+    private String saveImageToInternalStorage(Uri imageUri) {
+
+        try {
+
+            Bitmap bitmap =
+                    MediaStore.Images.Media.getBitmap(
+                            getContentResolver(),
+                            imageUri
+                    );
+
+            File file = new File(
+                    getFilesDir(),
+                    "profile_image.jpg"
+            );
+
+            FileOutputStream outputStream =
+                    new FileOutputStream(file);
+
+            bitmap.compress(
+                    Bitmap.CompressFormat.JPEG,
+                    90,
+                    outputStream
+            );
+
+            outputStream.flush();
+            outputStream.close();
+
+            return file.getAbsolutePath();
+
+        } catch (IOException e) {
+
+            Toast.makeText(
+                    this,
+                    "Unable to save profile picture",
+                    Toast.LENGTH_SHORT
+            ).show();
+
+            return null;
+        }
     }
 
     @Override

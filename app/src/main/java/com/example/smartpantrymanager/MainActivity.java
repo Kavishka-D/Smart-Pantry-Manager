@@ -2,7 +2,8 @@ package com.example.smartpantrymanager;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -13,6 +14,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import java.io.File;
 
 public class MainActivity extends BaseDrawerActivity {
 
@@ -73,21 +76,36 @@ public class MainActivity extends BaseDrawerActivity {
         );
 
         // Profile picture
-        String profileImage =
+        String profileImagePath =
                 preferences.getString(
                         "profile_image",
                         ""
                 );
 
-        if (!profileImage.isEmpty()) {
+        if (!profileImagePath.isEmpty()) {
 
-            try {
+            File imageFile =
+                    new File(profileImagePath);
 
-                homeProfileImage.setImageURI(
-                        Uri.parse(profileImage)
-                );
+            if (imageFile.exists()) {
 
-            } catch (Exception e) {
+                Bitmap bitmap =
+                        BitmapFactory.decodeFile(
+                                imageFile.getAbsolutePath()
+                        );
+
+                if (bitmap != null) {
+
+                    homeProfileImage.setImageBitmap(bitmap);
+
+                } else {
+
+                    homeProfileImage.setImageResource(
+                            R.drawable.ic_launcher_foreground
+                    );
+                }
+
+            } else {
 
                 homeProfileImage.setImageResource(
                         R.drawable.ic_launcher_foreground
